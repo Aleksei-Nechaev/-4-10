@@ -1,0 +1,126 @@
+#include <iostream>
+#include <locale.h>
+typedef struct node
+{
+	int zn;
+	struct node* left;
+	struct node* right;
+};
+
+struct node* root;
+
+struct node* add(int a, struct node* root, struct node* p)
+{
+	if (p == NULL)
+	{
+		p = (node*)malloc(sizeof(struct node));
+		p->left = NULL;
+		p->right = NULL;
+		p->zn = a;
+		if (root == NULL) return p;
+		if (a > root->zn) root->left = p;
+		else root->right = p;
+		return p;
+	}
+	if (a > p->zn) add(a, p, p->left);
+	else add(a, p, p->right);
+	return root;
+}
+
+struct node* add1(int a, struct node* root, struct node* p)
+{
+	if (p == NULL)
+	{
+		p = (node*)malloc(sizeof(struct node));
+		p->left = NULL;
+		p->right = NULL;
+		p->zn = a;
+		if (root == NULL) return p;
+		if(a==root->zn)
+		{
+			printf("Вы ввели одинаковое зн-е");
+			return p;
+		}
+		if (a > root->zn) root->left = p;
+		else root->right = p;
+		return p;
+	}
+	if (a == p->zn)
+	{
+		printf("Вы ввели одинаковое зн-е");
+		return p;
+	}
+	if (a > p->zn) add1(a, p, p->left);
+	else add1(a, p, p->right);
+	return root;
+}
+
+void vivod(int i, struct node* p)
+{
+	if (p == NULL) 
+	{ 
+		return; 
+	}
+	vivod(i + 1, p->right);
+	for (int d = 0; d < i; d++)
+	{
+		printf(" ");
+	}
+	printf("(%d)", i);
+	printf(" %d\n", p->zn);
+
+	vivod(i + 1, p->left);
+}
+void poisk(int y,int x, int i, struct node* p)
+{
+	if (p == NULL)
+	{
+		return;
+	}
+	poisk(y,x, i + 1, p->right);
+	if (x == p->zn)
+	{
+		printf(" %d", p->zn);
+		y++;
+		printf("\nУровень:%d",i);
+		printf("\nЧисло вхождений: %d", y);
+	}
+	poisk(y,x ,i + 1, p->left);
+}
+
+int main()
+{
+	setlocale(LC_ALL, "Rus");
+	int d; int begin = 0,x=0;
+	root = NULL;
+	while (begin != 4)
+	{
+		printf("\n1.Добавить элемент\n");
+		printf("2.Вывести набор элементов\n");
+		printf("3.Поиск\n");
+		printf("4.Выход\n");
+		printf("Выбор: ");
+		scanf_s("%d", &begin);
+
+		if (begin == 1)
+		{
+			scanf_s("%d", &d);
+			//root = add(d, root, root);
+			root = add1(d, root, root);
+		}
+
+
+		if (begin == 2)
+		{
+			vivod(0, root);
+		}
+
+		if (begin == 3)
+		{
+			scanf_s("%d", &x);
+			poisk(0,x, 0, root);
+		}
+	}
+}
+
+
